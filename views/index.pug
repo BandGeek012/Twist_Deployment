@@ -2,18 +2,20 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #[em LocalLibrary], a very basic Express website developed as a tutorial example on the Mozilla Developer Network.
+    p Welcome to the #[em Administrator Page], this is where you can access all of your administrative abilities such as adding or deleting data in your collections.
 
   h1 Dynamic content
 
-  if error
-    p Error getting dynamic content.
-  else
-    p The library has the following record counts:
 
-    ul
-      li #[strong participants:] !{data.participant_count}
-      li #[strong Copies:] !{data.participant_instance_count}
-      li #[strong Copies available:] !{data.participant_instance_available_count} 
-      li #[strong Authors:] !{data.author_count}
-      li #[strong Genres:] !{data.genre_count}
+
+  h1= "Add a Participant"
+  form(action="/participant", method="post")
+    p First Name:
+      input(type="text", name="first_name", placeholder="First Name", required="true")
+    p Last Name:
+      input(type="text" name="last_name" placeholder="Last Name" required="true")
+    p Email:
+      input(type="email" name="email" placeholder="Email")
+    p Phone:
+      input(type="tel" name="phone" placeholder="Phone")
+    input(type="submit", value="Submit")
