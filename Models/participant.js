@@ -10,7 +10,7 @@ var ParticipantSchema = new Schema(
     Address: {type: String, required: true, max: 100},
     Email: {type: String, required: true, max: 100},
     TimeStamp: {type: Date},
-    ParticipanType: {type: String, required: true, max: 100},
+    ParticipantType: {type: String, required: true, max: 100},
   }
 );
 
