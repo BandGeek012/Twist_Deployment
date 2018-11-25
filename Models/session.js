@@ -18,7 +18,7 @@ var SessionSchema = new Schema(
 ParticipantSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/session/' + this._id;
+  return '/admin/session/' + this._id;
 });
 
 //Export model

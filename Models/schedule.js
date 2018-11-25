@@ -17,7 +17,7 @@ var ScheduleSchema = new Schema(
 ScheduleSchema
 .virtual('url')
 .get(function () {
-  return '/catalog/schedule/' + this._id;
+  return '/admin/schedule/' + this._id;
 });
 
 //Export model
