@@ -3,3 +3,10 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+
+  ul
+    li #[strong High School:] !{data.highschool_count}
+    li #[strong Participants:] !{data.participant_count}
+    li #[strong Presenters:] !{data.presenter_count}
+    li #[strong Topics:] !{data.topic_count}
