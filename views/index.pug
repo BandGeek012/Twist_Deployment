@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1= title
+
   p Welcome to #{title}
 
 
@@ -10,3 +11,18 @@ block content
     li #[strong Participants:] !{data.participant_count}
     li #[strong Presenters:] !{data.presenter_count}
     li #[strong Topics:] !{data.topic_count}
+
+    p Welcome to the #[em Administrator Page], this is where you can access all of your administrative abilities such as adding or deleting data in your collections.
+
+  h1= "Add a Participant"
+  form(action="/participant", method="post")
+    p First Name:
+      input(type="text", name="first_name", placeholder="First Name", required="true")
+    p Last Name:
+      input(type="text" name="last_name" placeholder="Last Name" required="true")
+    p Email:
+      input(type="email" name="email" placeholder="Email")
+    p Phone:
+      input(type="tel" name="phone" placeholder="Phone")
+    input(type="submit", value="Submit")
+
