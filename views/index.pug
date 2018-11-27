@@ -14,8 +14,8 @@ block content
 
     p Welcome to the #[em Administrator Page], this is where you can access all of your administrative abilities such as adding or deleting data in your collections.
 
-  h1= "Add a Participant"
-  form(action="/participant", method="post")
+  //h1= "Add a Participant"
+  //form(action="/participant", method="post")
     p First Name:
       input(type="text", name="first_name", placeholder="First Name", required="true")
     p Last Name:
@@ -25,4 +25,4 @@ block content
     p Phone:
       input(type="tel" name="phone" placeholder="Phone")
     input(type="submit", value="Submit")
-
+    This is for the user side of the side for participants to enter themselves into the database before they select their topics.
