@@ -1,3 +1,5 @@
+//const { body,validationResult } = require('express-validator/check');
+//const { sanitizeBody } = require('express-validator/filter');
 var express = require('express');
 var router = express.Router();
 
@@ -10,6 +12,7 @@ router.get('/', function(req, res) {
 // Require controller modules.
 var participant_controller = require('../controllers/participantController');
 var school_controller = require('../controllers/schoolController');
+var room_controller = require('../controllers/roomController');
 
 /// School ROUTES ///
 
