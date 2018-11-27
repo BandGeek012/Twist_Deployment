@@ -15,7 +15,7 @@ var SessionSchema = new Schema(
 
 
 // Virtual for session's URL
-ParticipantSchema
+SessionSchema
 .virtual('url')
 .get(function () {
   return '/admin/session/' + this._id;
