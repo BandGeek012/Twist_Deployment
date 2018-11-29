@@ -33,6 +33,7 @@ router.get('/', function(req, res) {
 // Require controller modules.
 var participant_controller = require('../controllers/participantController');
 var school_controller = require('../controllers/schoolController');
+var presenter_controller = require('../controllers/presenterController');
 var room_controller = require('../controllers/roomController');
 
 /// School ROUTES ///
@@ -92,6 +93,35 @@ router.get('/participant/:id', participant_controller.participant_detail);
 
 // GET request for list of all participant items.
 router.get('/participant', participant_controller.participant_list);
+
+/// presenter ROUTES ///
+
+// GET admin home page.
+router.get('/', presenter_controller.index);
+
+// GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
+router.get('/presenter/create', presenter_controller.presenter_create_get);
+
+// POST request for creating presenter.
+router.post('/presenter/create', presenter_controller.presenter_create_post);
+
+// GET request to delete presenter.
+router.get('/presenter/:id/delete', presenter_controller.presenter_delete_get);
+
+// POST request to delete presenter.
+router.post('/presenter/:id/delete', presenter_controller.presenter_delete_post);
+
+// GET request to update presenter.
+router.get('/presenter/:id/update', presenter_controller.presenter_update_get);
+
+// POST request to update presenter.
+router.post('/presenter/:id/update', presenter_controller.presenter_update_post);
+
+// GET request for one presenter.
+router.get('/presenter/:id', presenter_controller.presenter_detail);
+
+// GET request for list of all presenter items.
+router.get('/presenter', presenter_controller.presenter_list);
 
 module.exports = router;
 
