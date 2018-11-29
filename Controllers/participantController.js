@@ -1,3 +1,5 @@
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 var Participant = require('../models/participant');
 
 var async = require('async');
@@ -14,8 +16,8 @@ exports.index = function(req, res) {
         participant_instance_available_count: function(callback) {
             participant.countDocuments({status:'Available'}, callback);
         },
-        author_count: function(callback) {
-            Author.countDocuments({}, callback);
+        school_count: function(callback) {
+            School.countDocuments({}, callback);
         },
         genre_count: function(callback) {
             Genre.countDocuments({}, callback);
@@ -44,10 +46,20 @@ exports.participant_list = function(req, res, next) {
       res.send('NOT IMPLEMENTED: Participant detail: ' + req.params.id);
   };
   
-  // Display Participant create form on GET.
-  exports.participant_create_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant create GET');
-  };
+ // Display participant create form on GET.
+exports.participant_create_get = function(req, res, next) { 
+      
+    // Get all Schools , which we can use for adding to our Participant.
+    async.parallel({
+        schools: function(callback) {
+            School.find(callback);
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        res.render('participant_form', { title: 'Enroll', schools: results.schools, genres: results.genres });
+    });
+    
+};
   
   // Handle Participant create on POST.
   exports.participant_create_post = function(req, res) {
