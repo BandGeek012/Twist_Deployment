@@ -31,7 +31,7 @@ exports.index = function(req, res) {
 exports.school_list = function(req, res, next) {
 
     School.find({}, 'HSName HSID')
-      .populate('HSID')
+      .populate('_id')
       .exec(function (err, list_schools) {
         if (err) { return next(err); }
         //Successful, so render

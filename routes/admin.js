@@ -22,9 +22,6 @@ router.get('/schedule', schedule_controller.schedule_list);
 router.get('/session', session_controller.session_list);
 
 
-module.exports = router;
-=======
-
 router.get('/', function(req, res) {
     res.render('index', {title: 'Admin Page'});
     //res.redirect('/admin');
