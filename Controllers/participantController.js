@@ -2,8 +2,8 @@ var Participant = require('../models/participant');
 
 var async = require('async');
 
-exports.index = function(req, res) {   
-    
+exports.index = function(req, res) {
+
     async.parallel({
         participant_count: function(callback) {
             participant.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
@@ -25,10 +25,11 @@ exports.index = function(req, res) {
     });
 };
 
+
 // Display list of all Participants.
 exports.participant_list = function(req, res, next) {
 
-    Participant.find({}, 'LastName FirstName ParticipantID')
+    Participant.find({}, 'ParticipantID LastName FirstName')
       .populate('ParticipantID')
       .exec(function (err, list_participants) {
         if (err) { return next(err); }
@@ -38,7 +39,7 @@ exports.participant_list = function(req, res, next) {
       
   };
 
-  // Display detail page for a specific participant.
+  // Display detail page for a specific Participant.
   exports.participant_detail = function(req, res) {
       res.send('NOT IMPLEMENTED: Participant detail: ' + req.params.id);
   };
