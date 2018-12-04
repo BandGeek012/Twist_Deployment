@@ -4,7 +4,7 @@ const { sanitizeBody } = require('express-validator/filter');
 var mongoose = require('mongoose');
 var Schedule = require('../models/Schedule');
 var School = require('../models/highschool');
-var Participant = require('../models/Participant');
+//var Participant = require('../models/Participant');
 
 var async = require('async');
 
