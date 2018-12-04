@@ -6,4 +6,6 @@ block content
   ul
     each Presenter in session_list
       li
-        a(href=session.url) #{Presenter.name})
+        a(href=session.url) #{PresenterID.name})
+    else
+      li There are no sessions.

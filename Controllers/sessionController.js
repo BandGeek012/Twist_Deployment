@@ -1,3 +1,4 @@
+
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -102,4 +103,3 @@ exports.session_update_get = function(req, res) {
 exports.session_update_post = function(req, res) {
     res.send('NOT IMPLEMENTED: session update POST');
 };
-

@@ -42,18 +42,14 @@ exports.participant_list = function(req, res, next) {
 
   // Display detail page for a specific participant.
 exports.participant_detail = function(req, res, next) {
-    var id = mongoose.Types.ObjectId(req.params.id);
+
     async.parallel({
         participant: function(callback) {
 
             Participant.findById(req.params.id)
+              .populate('school')
               .exec(callback);
         },
-
-        participant_school: function(callback) {
-            School.find({ 'participant': req.params.id })
-            .exec(callback);
-          },
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.participant==null) { // No results.
@@ -62,7 +58,7 @@ exports.participant_detail = function(req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('participant_detail', { title: 'Participant Detail', participant:  results.participant, participant_school: results.participant_school } );
+        res.render('participant_detail', { title: 'Title', participant:  results.participant, participant_instances: results.participant_instance } );
     });
 
 };
