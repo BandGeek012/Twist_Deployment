@@ -1,3 +1,4 @@
+
 //const { body,validationResult } = require('express-validator/check');
 //const { sanitizeBody } = require('express-validator/filter');
 var express = require('express');
@@ -117,6 +118,39 @@ router.get('/presenter/:id', presenter_controller.presenter_detail);
 
 // GET request for list of all presenter items.
 router.get('/presenter', presenter_controller.presenter_list);
+
+
+
+
+/// topic ROUTES ///
+
+// GET admin home page.
+router.get('/', topic_controller.index);
+
+// GET request for creating a topic. NOTE This must come before routes that display topic (uses id).
+router.get('/topic/create', topic_controller.topic_create_get);
+
+// POST request for creating topic.
+router.post('/topic/create', topic_controller.topic_create_post);
+
+// GET request to delete topic.
+router.get('/topic/:id/delete', topic_controller.topic_delete_get);
+
+// POST request to delete topic.
+router.post('/topic/:id/delete', topic_controller.topic_delete_post);
+
+// GET request to update topic.
+router.get('/topic/:id/update', topic_controller.topic_update_get);
+
+// POST request to update topic.
+router.post('/topic/:id/update', topic_controller.topic_update_post);
+
+// GET request for one topic.
+router.get('/topic/:id', topic_controller.topic_detail);
+
+// GET request for list of all topic items.
+router.get('/topic', topic_controller.topic_list);
+
 
 module.exports = router;
 

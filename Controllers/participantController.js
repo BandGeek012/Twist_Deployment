@@ -1,7 +1,3 @@
-const { body,validationResult } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
-var mongoose = require('mongoose');
-var School = require('../models/highschool');
 var Participant = require('../models/participant');
 
 var async = require('async');
@@ -18,11 +14,11 @@ exports.index = function(req, res) {
         participant_instance_available_count: function(callback) {
             participant.countDocuments({status:'Available'}, callback);
         },
-        school_count: function(callback) {
-            School.countDocuments({}, callback);
+        author_count: function(callback) {
+            Author.countDocuments({}, callback);
         },
-        school_count: function(callback) {
-            School.countDocuments({}, callback);
+        genre_count: function(callback) {
+            Genre.countDocuments({}, callback);
         }
     }, function(err, results) {
         res.render('index', { title: 'Local Library Home', error: err, data: results });
@@ -33,7 +29,8 @@ exports.index = function(req, res) {
 // Display list of all Participants.
 exports.participant_list = function(req, res, next) {
 
-    Participant.find({})
+    Participant.find({}, 'ParticipantID LastName FirstName')
+      .populate('ParticipantID')
       .exec(function (err, list_participants) {
         if (err) { return next(err); }
         //Successful, so render
@@ -41,6 +38,7 @@ exports.participant_list = function(req, res, next) {
       });
       
   };
+
 
   // Display detail page for a specific participant.
 exports.participant_detail = function(req, res, next) {
@@ -83,7 +81,8 @@ exports.participant_create_get = function(req, res, next) {
     });
     
 };
-  
+
+
  // Handle participant create on POST.
 exports.participant_create_post = [
     // Convert the school to an array.
