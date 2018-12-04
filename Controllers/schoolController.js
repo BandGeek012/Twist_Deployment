@@ -1,6 +1,8 @@
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+var mongoose = require('mongoose');
 var School = require('../models/highschool');
+var Participant = require('../models/participant');
 
 var async = require('async');
 
@@ -40,10 +42,32 @@ exports.school_list = function(req, res, next) {
       
   };
 
-  // Display detail page for a specific school.
-  exports.school_detail = function(req, res) {
-      res.send('NOT IMPLEMENTED: School detail: ' + req.params.id);
-  };
+  // Display detail page for a specific School.
+exports.school_detail = function(req, res, next) {
+	var id = mongoose.Types.ObjectId(req.params.id);
+    async.parallel({
+        school: function(callback) {
+            School.findById(req.params.id)
+              .exec(callback);
+        },
+
+        school_participants: function(callback) {
+          Participant.find({ 'school': req.params.id })
+          .exec(callback);
+        },
+
+    }, function(err, results) {
+        if (err) { return next(err); }
+        if (results.school==null) { // No results.
+            var err = new Error('School not found');
+            err.status = 404;
+            return next(err);
+        }
+        // Successful, so render
+        res.render('school_detail', { title: 'School Detail', school: results.school, school_participants: results.school_participants } );
+    });
+
+};
   
   // Display School create form on GET.
   exports.school_create_get = function(req, res, next) {     
@@ -53,11 +77,15 @@ exports.school_list = function(req, res, next) {
   // Handle School create on POST.
 exports.school_create_post =  [
    
-    // Validate that the name field is not empty.
-    body('name', 'School name required').isLength({ min: 1 }).trim(),
+    // Validate that the HSName field is not empty.
+    body('HSName', 'School HSName required').isLength({ min: 1 }).trim(),
     
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('name').trim().escape(),
+    // Sanitize (trim and escape) the HSName field.
+    sanitizeBody('HSName').trim().escape(),
+    sanitizeBody('HSID').trim().escape(),
+
+     // Sanitize fields (using wildcard).
+     sanitizeBody('*').trim().escape(),
   
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -67,7 +95,8 @@ exports.school_create_post =  [
   
       // Create a School object with escaped and trimmed data.
       var school = new School(
-        { name: req.body.name }
+        { HSName: req.body.HSName,
+          HSID: req.body.HSID }
       );
   
   
@@ -78,8 +107,8 @@ exports.school_create_post =  [
       }
       else {
         // Data from form is valid.
-        // Check if School with same name already exists.
-        School.findOne({ 'name': req.body.name })
+        // Check if School with same HSName already exists.
+        School.findOne({ 'HSName': req.body.HSName })
           .exec( function(err, found_school) {
              if (err) { return next(err); }
   
@@ -102,15 +131,56 @@ exports.school_create_post =  [
     }
   ];
   
-  // Display school delete form on GET.
-  exports.school_delete_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: School delete GET');
-  };
+  // Display School delete form on GET.
+exports.school_delete_get = function(req, res, next) {
+
+    async.parallel({
+        school: function(callback) {
+            School.findById(req.params.id).exec(callback)
+        },
+        school_participants: function(callback) {
+          Participant.find({ 'school': req.params.id }).exec(callback)
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        if (results.school==null) { // No results.
+            res.redirect('/catalog/authors');
+        }
+        // Successful, so render.
+        res.render('school_delete', { title: 'Delete School', school: results.school, school_participants: results.school_participantss } );
+    });
+
+};
+
   
-  // Handle school delete on POST.
-  exports.school_delete_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: School delete POST');
-  };
+  // Handle School delete on POST.
+exports.school_delete_post = function(req, res, next) {
+
+    async.parallel({
+        school: function(callback) {
+          School.findById(req.body.schoolid).exec(callback)
+        },
+        school_participants: function(callback) {
+          Participant.find({ 'school': req.body.authorid }).exec(callback)
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        // Success
+        if (results.school_participants.length > 0) {
+            // School has participants. Render in same way as for GET route.
+            res.render('author_delete', { title: 'Delete School', school: results.school, school_participants: results.school_participants } );
+            return;
+        }
+        else {
+            // School has no participants. Delete object and redirect to the list of school.
+            School.findByIdAndRemove(req.body.schoolid, function deleteSchool(err) {
+                if (err) { return next(err); }
+                // Success - go to school list
+                res.redirect('/catalog/schools')
+            })
+        }
+    });
+};
   
   // Display school update form on GET.
   exports.school_update_get = function(req, res) {
