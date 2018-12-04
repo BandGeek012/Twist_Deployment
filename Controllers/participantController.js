@@ -1,3 +1,7 @@
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+var mongoose = require('mongoose');
+var School = require('../models/highschool');
 var Participant = require('../models/participant');
 
 var async = require('async');
@@ -14,11 +18,11 @@ exports.index = function(req, res) {
         participant_instance_available_count: function(callback) {
             participant.countDocuments({status:'Available'}, callback);
         },
-        author_count: function(callback) {
-            Author.countDocuments({}, callback);
+        school_count: function(callback) {
+            School.countDocuments({}, callback);
         },
-        genre_count: function(callback) {
-            Genre.countDocuments({}, callback);
+        school_count: function(callback) {
+            School.countDocuments({}, callback);
         }
     }, function(err, results) {
         res.render('index', { title: 'Local Library Home', error: err, data: results });
@@ -29,8 +33,7 @@ exports.index = function(req, res) {
 // Display list of all Participants.
 exports.participant_list = function(req, res, next) {
 
-    Participant.find({}, 'ParticipantID LastName FirstName')
-      .populate('ParticipantID')
+    Participant.find({})
       .exec(function (err, list_participants) {
         if (err) { return next(err); }
         //Successful, so render
@@ -39,17 +42,20 @@ exports.participant_list = function(req, res, next) {
       
   };
 
-
   // Display detail page for a specific participant.
 exports.participant_detail = function(req, res, next) {
-
+    var id = mongoose.Types.ObjectId(req.params.id);
     async.parallel({
         participant: function(callback) {
 
             Participant.findById(req.params.id)
-              .populate('school')
               .exec(callback);
         },
+
+        participant_school: function(callback) {
+            School.find({ 'participant': req.params.id })
+            .exec(callback);
+          },
     }, function(err, results) {
         if (err) { return next(err); }
         if (results.participant==null) { // No results.
@@ -58,7 +64,7 @@ exports.participant_detail = function(req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('participant_detail', { title: 'Title', participant:  results.participant, participant_instances: results.participant_instance } );
+        res.render('participant_detail', { title: 'Participant Detail', participant:  results.participant, participant_school: results.participant_school } );
     });
 
 };
@@ -77,8 +83,7 @@ exports.participant_create_get = function(req, res, next) {
     });
     
 };
-
-
+  
  // Handle participant create on POST.
 exports.participant_create_post = [
     // Convert the school to an array.
@@ -133,7 +138,7 @@ exports.participant_create_post = [
                         results.schools[i].checked='true';
                     }
                 }
-                res.render('participant_form', { title: 'Create Participant',authors:results.authors, schools:results.schools, participant: participant, errors: errors.array() });
+                res.render('participant_form', { title: 'Create Participant',participants:results.participants, schools:results.schools, participant: participant, errors: errors.array() });
             });
             return;
         }

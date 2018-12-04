@@ -17,6 +17,7 @@ var presenter_controller = require('../controllers/presenterController');
 var schedule_controller = require('../controllers/scheduleController');
 var session_controller = require('../controllers/sessionController');
 var participant_controller = require('../controllers/participantController');
+var topic_controller = require('../controllers/topicController');
 
 
 /// School ROUTES ///
@@ -139,7 +140,7 @@ router.get('/topic', topic_controller.topic_list);
 
 /// session ROUTES ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-router.get('/', session_controller.index);
+//router.get('/', session_controller.index);
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/session/create', session_controller.session_create_get);

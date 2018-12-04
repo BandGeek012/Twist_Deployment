@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var SessionSchema = new Schema(
   {
     SessionNum: {type:String, required: true, max:100},
-    PresenterID: {type: Schema.Types.ObjectId, ref: 'Presenter'},
+    PresenterID: {type:String, required: true, max:100},
     TimeStamp: {type: Date}
 
 });
@@ -14,7 +14,7 @@ var SessionSchema = new Schema(
 SessionSchema
 .virtual('name')
 .get(function () {
-  return this.session;
+  return this.SessionNum;
 });
 
 
