@@ -1,3 +1,4 @@
+
 //const { body,validationResult } = require('express-validator/check');
 //const { sanitizeBody } = require('express-validator/filter');
 var express = require('express');
@@ -13,6 +14,9 @@ router.get('/', function(req, res) {
 var schedule_controller = require('../controllers/scheduleController');
 var session_controller = require('../controllers/sessionController');
 var participant_controller = require('../controllers/participantController');
+var school_controller = require('../controllers/schoolController');
+var presenter_controller = require('../controllers/presenterController');
+var room_controller = require('../controllers/roomController');
 //schedule routes
 router.get('/schedule', schedule_controller.schedule_list);
 
@@ -27,12 +31,6 @@ router.get('/', function(req, res) {
     //res.redirect('/admin');
 });
 
-// Require controller modules.
-var participant_controller = require('../controllers/participantController');
-var school_controller = require('../controllers/schoolController');
-var presenter_controller = require('../controllers/presenterController');
-var room_controller = require('../controllers/roomController');
-var topic_controller = require('../controllers/topicController');
 
 /// School ROUTES ///
 
@@ -120,6 +118,8 @@ router.get('/presenter/:id', presenter_controller.presenter_detail);
 
 // GET request for list of all presenter items.
 router.get('/presenter', presenter_controller.presenter_list);
+
+
 
 
 /// topic ROUTES ///
