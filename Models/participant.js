@@ -4,13 +4,13 @@ var Schema = mongoose.Schema;
 // add list of session and list of topics
 var ParticipantSchema = new Schema(
   {
-    ParticipantID: {type: String,  max: 100},
+    ParticipantID: {type: String, required: true, max: 100},
     LastName: {type: String, required: true, max: 100},
     FirstName: {type: String, required: true, max: 100},
     Address: {type: String, required: true, max: 100},
     Email: {type: String, required: true, max: 100},
     TimeStamp: {type: Date},
-    ParticipantType: {type: String, max: 100},
+    ParticipantType: {type: String, required: true, max: 100},
   }
 );
 
