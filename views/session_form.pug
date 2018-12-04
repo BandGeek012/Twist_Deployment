@@ -5,8 +5,11 @@ block content
 
   form(method='POST' action='')
     div.form-group
-      label(for='name') Session:
-      input#name.form-control(type='text', placeholder='Session' name='Session' value=(undefined===session ? '' : session.name))
+      label(for='SessionNum') Session:
+      input#name.form-control(type='text', placeholder='Session' name='SessionNum' value=(undefined===session ? '' : session.SessionNum))
+    div.form-group
+      label(for='PresenterID') Session:
+      input#name.form-control(type='text', placeholder='Session' name='Session' value=(undefined===session ? '' : PresenterID.name))
     button.btn.btn-primary(type='submit') Submit
 
   if errors
