@@ -13,6 +13,9 @@ router.get('/', function(req, res) {
 var schedule_controller = require('../controllers/scheduleController');
 var session_controller = require('../controllers/sessionController');
 var participant_controller = require('../controllers/participantController');
+var school_controller = require('../controllers/schoolController');
+var presenter_controller = require('../controllers/presenterController');
+var room_controller = require('../controllers/roomController');
 //schedule routes
 router.get('/schedule', schedule_controller.schedule_list);
 
@@ -27,11 +30,6 @@ router.get('/', function(req, res) {
     //res.redirect('/admin');
 });
 
-// Require controller modules.
-var participant_controller = require('../controllers/participantController');
-var school_controller = require('../controllers/schoolController');
-var presenter_controller = require('../controllers/presenterController');
-var room_controller = require('../controllers/roomController');
 
 /// School ROUTES ///
 
