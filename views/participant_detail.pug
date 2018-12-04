@@ -1,23 +1,21 @@
 extends layout
 
 block content
-
-  h1 #{participant.name}
-  h3 Email: #{participant.Email}
-  h1 School:#{participant.Address}
+  h1 #{title}: #{participant.title}
   
-  div(style='margin-left:20px;margin-top:20px')
-
-    h4 Books
-    
-    dl
-      each participant in participant_school
-        dt 
-          a(href=school.url) #{school.HSName}
-        dd #{school.HSID}
-
-      else
-        p This participant is not a member of a school.
+  p #[strong Name:] 
+    a(href=participant.name.url) #{participant.name}
+  p #[strong Summary:] #{participant.summary}
+  p #[strong ISBN:] #{participant.isbn}
+  p #[strong School:]&nbsp;
+    each val, index in participant.school
+      a(href=val.url) #{val.name}
+      if index < participant.school.length - 1
+        |, 
+  
+ 
+    else
+      p There are no copies of this participant in the library.
     hr
     p
      a(href=participant.url+'/delete') Delete Participant

@@ -10,25 +10,12 @@ router.get('/', function(req, res) {
 });
 
 //require controller modules.
+var room_controller = require('../controllers/roomController');
+var school_controller = require('../controllers/schoolController');
+var presenter_controller = require('../controllers/presenterController');
 var schedule_controller = require('../controllers/scheduleController');
 var session_controller = require('../controllers/sessionController');
 var participant_controller = require('../controllers/participantController');
-var school_controller = require('../controllers/schoolController');
-var presenter_controller = require('../controllers/presenterController');
-var room_controller = require('../controllers/roomController');
-//schedule routes
-router.get('/schedule', schedule_controller.schedule_list);
-
-
-
-//session routes
-router.get('/session', session_controller.session_list);
-
-
-router.get('/', function(req, res) {
-    res.render('index', {title: 'Admin Page'});
-    //res.redirect('/admin');
-});
 
 
 /// School ROUTES ///
@@ -118,5 +105,62 @@ router.get('/presenter/:id', presenter_controller.presenter_detail);
 // GET request for list of all presenter items.
 router.get('/presenter', presenter_controller.presenter_list);
 
-module.exports = router;
+/// session ROUTES ///
 
+
+router.get('/', session_controller.index);
+
+// GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
+router.get('/session/create', session_controller.session_create_get);
+
+// POST request for creating presenter.
+router.post('/session/create', session_controller.session_create_post);
+
+// GET request to delete presenter.
+router.get('/session/:id/delete', session_controller.session_delete_get);
+
+// POST request to delete presenter.
+router.post('/session/:id/delete', session_controller.session_delete_post);
+
+// GET request to update presenter.
+router.get('/session/:id/update', session_controller.session_update_get);
+
+// POST request to update presenter.
+router.post('/session/:id/update', session_controller.session_update_post);
+
+// GET request for one presenter.
+router.get('/session/:id', session_controller.session_detail);
+
+// GET request for list of all presenter items.
+router.get('/session', session_controller.session_list);
+
+/// schedule ROUTES ///
+
+
+router.get('/', schedule_controller.index);
+
+// GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
+router.get('/schedule/create', schedule_controller.schedule_create_get);
+
+// POST request for creating presenter.
+router.post('/schedule/create', schedule_controller.schedule_create_post);
+
+// GET request to delete presenter.
+router.get('/schedule/:id/delete', schedule_controller.schedule_delete_get);
+
+// POST request to delete presenter.
+router.post('/schedule/:id/delete', schedule_controller.schedule_delete_post);
+
+// GET request to update presenter.
+router.get('/schedule/:id/update', schedule_controller.schedule_update_get);
+
+// POST request to update presenter.
+router.post('/schedule/:id/update', schedule_controller.schedule_update_post);
+
+// GET request for one presenter.
+router.get('/schedule/:id', schedule_controller.schedule_detail);
+
+// GET request for list of all presenter items.
+router.get('/schedule', schedule_controller.schedule_list);
+
+module.exports = router;
