@@ -5,17 +5,11 @@ var Schema = mongoose.Schema;
 var SessionSchema = new Schema(
   {
     SessionNum: {type:String, required: true, max:100},
-    PresenterID: {type: Schema.Types.ObjectId, ref: 'Presenter'},
     TimeStamp: {type: Date}
 
-});
+  }
+);
 
-// Virtual for school's name
-SessionSchema
-.virtual('name')
-.get(function () {
-  return this.session;
-});
 
 
 

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var PresenterSchema = new Schema(
+var TopicSchema = new Schema(
   {
     TopicID: {type: String, required: true, max: 100},
     Title: {type: String, required: true, max: 100},
@@ -10,8 +10,8 @@ var PresenterSchema = new Schema(
   }
 );
 
-// Virtual for presenters's full name
-PresenterSchema
+// Virtual for topics's full name
+TopicSchema
 .virtual('name')
 .get(function () {
   return this.LastName + ', ' + this.FirstName;
@@ -19,12 +19,12 @@ PresenterSchema
 
 
 
-// Virtual for presenter's URL
-PresenterSchema
+// Virtual for topic's URL
+TopicSchema
 .virtual('url')
 .get(function () {
-  return '/admin/presenter/' + this._id;
+  return '/admin/topic/' + this._id;
 });
 
 //Export model
-module.exports = mongoose.model('Presenter', PresenterSchema);
+module.exports = mongoose.model('Topic', TopicSchema);
