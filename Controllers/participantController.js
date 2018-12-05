@@ -138,7 +138,7 @@ exports.participant_create_post = [
                         results.schools[i].checked='true';
                     }
                 }
-                res.render('participant_form', { title: 'Create Participant',authors:results.authors, schools:results.schools, participant: participant, errors: errors.array() });
+                res.render('participant_form', { title: 'Create Participant',participants:results.participants, schools:results.schools, participant: participant, errors: errors.array() });
             });
             return;
         }

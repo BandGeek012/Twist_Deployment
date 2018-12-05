@@ -22,3 +22,4 @@ ScheduleSchema
 
 //Export model
 module.exports = mongoose.model('Schedule', ScheduleSchema);
+

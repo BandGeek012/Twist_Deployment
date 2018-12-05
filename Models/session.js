@@ -5,11 +5,17 @@ var Schema = mongoose.Schema;
 var SessionSchema = new Schema(
   {
     SessionNum: {type:String, required: true, max:100},
+    PresenterID: {type:String, required: true, max:100},
     TimeStamp: {type: Date}
 
-  }
-);
+});
 
+// Virtual for school's name
+SessionSchema
+.virtual('name')
+.get(function () {
+  return this.SessionNum;
+});
 
 
 
@@ -23,3 +29,4 @@ SessionSchema
 
 //Export model
 module.exports = mongoose.model('Session', SessionSchema);
+
