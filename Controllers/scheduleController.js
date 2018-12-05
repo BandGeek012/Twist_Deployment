@@ -21,7 +21,7 @@ exports.index = function(req, res) {
 // Display list of all schedules.
 exports.schedule_list = function(req, res, next) {
 
-    schedule.find({}, 'Schedule')
+    Schedule.find({}, 'Schedule')
       .populate('schedule')
       .exec(function (err, list_schedules) {
         if (err) { return next(err); }
@@ -65,4 +65,3 @@ exports.schedule_list = function(req, res, next) {
   exports.schedule_update_post = function(req, res) {
       res.send('NOT IMPLEMENTED: schedule update POST');
   };
-
