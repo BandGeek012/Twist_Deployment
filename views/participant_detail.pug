@@ -4,21 +4,9 @@ block content
 
   h1 #{participant.name}
   h3 Email: #{participant.Email}
-  h1 School:#{participant.Address}
+  h3 Address:#{participant.Address}
   
   div(style='margin-left:20px;margin-top:20px')
-
-    h4 Books
-    
-    dl
-      each participant in participant_school
-        dt 
-          a(href=school.url) #{school.HSName}
-        dd #{school.HSID}
-
-      else
-        p This participant is not a member of a school.
-    hr
     p
      a(href=participant.url+'/delete') Delete Participant
     p

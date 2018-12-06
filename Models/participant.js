@@ -11,6 +11,7 @@ var ParticipantSchema = new Schema(
     Email: {type: String, required: true, max: 100},
     TimeStamp: {type: Date},
     ParticipantType: {type: String, required: true, max: 100},
+    School: {type: Schema.Types.ObjectId, ref:'School'}
   }
 );
 

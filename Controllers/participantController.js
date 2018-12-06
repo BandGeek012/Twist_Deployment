@@ -42,44 +42,32 @@ exports.participant_list = function(req, res, next) {
       
   };
 
-  // Display detail page for a specific participant.
+ // Display detail page for a specific Participant.
 exports.participant_detail = function(req, res, next) {
-    var id = mongoose.Types.ObjectId(req.params.id);
-    async.parallel({
-        participant: function(callback) {
 
-            Participant.findById(req.params.id)
-              .exec(callback);
-        },
-
-        participant_school: function(callback) {
-            School.find({ 'participant': req.params.id })
-            .exec(callback);
-          },
-    }, function(err, results) {
-        if (err) { return next(err); }
-        if (results.participant==null) { // No results.
-            var err = new Error('Participant not found');
-            err.status = 404;
-            return next(err);
+    Participant.findById(req.params.id)
+    .populate('School')
+    .exec(function (err, participant) {
+      if (err) { return next(err); }
+      if (participant==null) { // No results.
+          var err = new Error('No school associated with participant.');
+          err.status = 404;
+          return next(err);
         }
-        // Successful, so render.
-        res.render('participant_detail', { title: 'Participant Detail', participant:  results.participant, participant_school: results.participant_school } );
-    });
+      // Successful, so render.
+      res.render('participant_detail', { title: 'School:', participant:  participant});
+    })
 
 };
   
- // Display participant create form on GET.
-exports.participant_create_get = function(req, res, next) { 
-      
-    // Get all Schools , which we can use for adding to our Participant.
-    async.parallel({
-        schools: function(callback) {
-            School.find(callback);
-        },
-    }, function(err, results) {
-        if (err) { return next(err); }
-        res.render('participant_form', { title: 'Enroll', schools: results.schools, schools: results.schools });
+// Display Participant create form on GET.
+exports.participant_create_get = function(req, res, next) {       
+
+    School.find({},'HSName')
+    .exec(function (err, schools) {
+      if (err) { return next(err); }
+      // Successful, so render.
+      res.render('participant_form', {title: 'Create Participant', school_list:schools});
     });
     
 };
@@ -154,21 +142,101 @@ exports.participant_create_post = [
 ];
   
   // Display Participant delete form on GET.
-  exports.participant_delete_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant delete GET');
-  };
-  
-  // Handle Participant delete on POST.
-  exports.participant_delete_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant delete POST');
-  };
-  
-  // Display Participant update form on GET.
-  exports.participant_update_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant update GET');
-  };
-  
-  // Handle Participant update on POST.
-  exports.participant_update_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant update POST');
-  };
+exports.participant_delete_get = function(req, res, next) {
+
+    Participant.findById(req.params.id)
+    .populate('school')
+    .exec(function (err, participant) {
+        if (err) { return next(err); }
+        if (participant==null) { // No results.
+            res.redirect('/catalog/participants');
+        }
+        // Successful, so render.
+        res.render('participant_delete', { title: 'Delete Participant', participant:  participant});
+    })
+
+};
+// Handle Participant delete on POST.
+exports.participant_delete_post = function(req, res, next) {
+    
+    // Assume valid Participant id in field.
+    Participant.findByIdAndRemove(req.body.id, function deleteParticipant(err) {
+        if (err) { return next(err); }
+        // Success, so redirect to list of Participant items.
+        res.redirect('/catalog/participants');
+        });
+
+};
+
+// Display Participant update form on GET.
+exports.participant_update_get = function(req, res, next) {
+
+    // Get school, authors and genres for form.
+    async.parallel({
+        participant: function(callback) {
+            Participant.findById(req.params.id).populate('school').exec(callback)
+        },
+        schools: function(callback) {
+            School.find({},callback)
+        },
+
+        }, function(err, results) {
+            if (err) { return next(err); }
+            if (results.participant==null) { // No results.
+                var err = new Error('School copy not found');
+                err.status = 404;
+                return next(err);
+            }
+            // Success.
+            res.render('participant_form', { title: 'Update  Participant', school_list : results.schools, selected_school : results.participant.school, participant:results.participant });
+        });
+
+};
+
+// Handle Participant update on POST.
+exports.participant_update_post = [
+
+    // Validate fields.
+    //body('HSName', 'School must be specified').isLength({ min: 1 }).trim(),
+    body('FirstName', 'Imprint must be specified').isLength({ min: 1 }).trim(),
+    body('LastName', 'Invalid date').isLength({ min: 1 }).trim(),
+    
+    // Sanitize fields.
+    //sanitizeBody('HSName').trim().escape(),
+    sanitizeBody('FirstName').trim().escape(),
+    sanitizeBody('LastName').trim().escape(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Participant object with escaped/trimmed data and current id.
+        var participant = new Participant(
+          { FirstName: req.body.FirstName,
+            LastName: req.body.LastName,
+            School: req.body.School,
+            _id: req.params.id
+           });
+
+        if (!errors.isEmpty()) {
+            // There are errors so render the form again, passing sanitized values and errors.
+            School.find({},'title')
+                .exec(function (err, schools) {
+                    if (err) { return next(err); }
+                    // Successful, so render.
+                    res.render('participant_form', { title: 'Update Participant', school_list : schools, selected_school : participant.school, errors: errors.array(), participant:participant });
+            });
+            return;
+        }
+        else {
+            // Data from form is valid.
+            Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err,theparticipant) {
+                if (err) { return next(err); }
+                   // Successful - redirect to detail page.
+                   res.redirect(theparticipant.url);
+                });
+        }
+    }
+];
