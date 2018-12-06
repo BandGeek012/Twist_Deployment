@@ -19,6 +19,16 @@ block content
     div.form-group
       label(for='ParticipantType') Participant Type:
       input#name.form-control(type='text', placeholder='Occupation' name='ParticipantID' value=(undefined===participant ? '' : participant.ParticipantID))
+    div.form-group
+      label School:
+      div
+        for school in school_list
+          div(style='display: inline; padding-right:10px;')
+            if selected_school == school._id
+              input.checkbox-input(type='checkbox', name='School', id=school._id, value=school._id, checked=checked)
+            else  
+              input.checkbox-input(type='checkbox', name='School', id=school._id, value=school._id)
+            label(for=school._id) #{school.HSName}
     button.btn.btn-primary(type='submit') Submit
 
   if errors 
