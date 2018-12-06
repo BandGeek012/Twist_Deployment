@@ -154,21 +154,101 @@ exports.participant_create_post = [
 ];
   
   // Display Participant delete form on GET.
-  exports.participant_delete_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant delete GET');
-  };
-  
-  // Handle Participant delete on POST.
-  exports.participant_delete_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant delete POST');
-  };
-  
-  // Display Participant update form on GET.
-  exports.participant_update_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant update GET');
-  };
-  
-  // Handle Participant update on POST.
-  exports.participant_update_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Participant update POST');
-  };
+exports.participant_delete_get = function(req, res, next) {
+
+    Participant.findById(req.params.id)
+    .populate('school')
+    .exec(function (err, participant) {
+        if (err) { return next(err); }
+        if (participant==null) { // No results.
+            res.redirect('/catalog/participants');
+        }
+        // Successful, so render.
+        res.render('participant_delete', { title: 'Delete Participant', participant:  participant});
+    })
+
+};
+// Handle Participant delete on POST.
+exports.participant_delete_post = function(req, res, next) {
+    
+    // Assume valid Participant id in field.
+    Participant.findByIdAndRemove(req.body.id, function deleteParticipant(err) {
+        if (err) { return next(err); }
+        // Success, so redirect to list of Participant items.
+        res.redirect('/catalog/participants');
+        });
+
+};
+
+// Display Participant update form on GET.
+exports.participant_update_get = function(req, res, next) {
+
+    // Get school, authors and genres for form.
+    async.parallel({
+        participant: function(callback) {
+            Participant.findById(req.params.id).populate('school').exec(callback)
+        },
+        school: function(callback) {
+            School.find(callback)
+        },
+
+        }, function(err, results) {
+            if (err) { return next(err); }
+            if (results.participant==null) { // No results.
+                var err = new Error('School copy not found');
+                err.status = 404;
+                return next(err);
+            }
+            // Success.
+            res.render('participant_form', { title: 'Update  Participant', school_list : results.schools, selected_school : results.participant.school.HSID, participant:results.participant });
+        });
+
+};
+
+// Handle Participant update on POST.
+exports.participant_update_post = [
+
+    // Validate fields.
+    body('school', 'School must be specified').isLength({ min: 1 }).trim(),
+    body('FirstName', 'Imprint must be specified').isLength({ min: 1 }).trim(),
+    body('LastName', 'Invalid date').isLength({ min: 1 }).trim(),
+    
+    // Sanitize fields.
+    sanitizeBody('school').trim().escape(),
+    sanitizeBody('FirstName').trim().escape(),
+    sanitizeBody('LastName').trim().escape(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Participant object with escaped/trimmed data and current id.
+        var participant = new Participant(
+          { school: req.body.school,
+            FirstName: req.body.FirstName,
+            LastName: req.body.LastName,
+            _id: req.params.id
+           });
+
+        if (!errors.isEmpty()) {
+            // There are errors so render the form again, passing sanitized values and errors.
+            School.find({},'title')
+                .exec(function (err, schools) {
+                    if (err) { return next(err); }
+                    // Successful, so render.
+                    res.render('participant_form', { title: 'Update Participant', school_list : schools, selected_school : participant.school._id , errors: errors.array(), participant:participant });
+            });
+            return;
+        }
+        else {
+            // Data from form is valid.
+            Participant.findByIdAndUpdate(req.params.id, participant, {}, function (err,theparticipant) {
+                if (err) { return next(err); }
+                   // Successful - redirect to detail page.
+                   res.redirect(theparticipant.url);
+                });
+        }
+    }
+];
