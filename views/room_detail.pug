@@ -8,8 +8,8 @@ block content
     
     h4 Rooms
   
-      dl
-    each room in room_list
+    dl
+  each room in room_list
     dt 
       a(href=room.url) #{room.RoomNumber}
     dd #{room.summary}
@@ -17,10 +17,10 @@ block content
 
   
  
-    else
-      p This room does not exist.
-    hr
-    p
-     a(href=room.url+'/delete') Delete Room
-    p
-     a(href=room.url+'/update') Update Room
+  else
+    p This room does not exist.
+  hr
+  p
+   a(href=room.url+'/delete') Delete Room
+     p
+   a(href=room.url+'/update') Update Room
