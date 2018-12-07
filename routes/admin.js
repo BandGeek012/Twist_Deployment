@@ -29,11 +29,9 @@ router.get('/session', session_controller.session_list);
 
 /// School ROUTES ///
 
-<<<<<<< HEAD
 // GET admin home page.
 router.get('/school', school_controller.index);
-=======
->>>>>>> e07651d6c856be863db9c8c829b6cbbb5f7f416f
+
 
 // GET request for creating a School. NOTE This must come before routes that display school (uses id).
 router.get('/school/create', school_controller.school_create_get);
@@ -61,11 +59,10 @@ router.get('/school', school_controller.school_list);
 
 /// participant ROUTES ///
 
-<<<<<<< HEAD
+
 // GET admin home page.
 router.get('/participant', participant_controller.index);
-=======
->>>>>>> e07651d6c856be863db9c8c829b6cbbb5f7f416f
+
 
 // GET request for creating a participant. NOTE This must come before routes that display participant (uses id).
 router.get('/participant/create', participant_controller.participant_create_get);
@@ -93,11 +90,10 @@ router.get('/participant', participant_controller.participant_list);
 
 /// presenter ROUTES ///
 
-<<<<<<< HEAD
+
 // GET admin home page.
 router.get('/presenter', presenter_controller.index);
-=======
->>>>>>> e07651d6c856be863db9c8c829b6cbbb5f7f416f
+
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/presenter/create', presenter_controller.presenter_create_get);
@@ -126,11 +122,10 @@ router.get('/presenter', presenter_controller.presenter_list);
 
 /// topic ROUTES ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
+
 // GET admin home page.
 router.get('/topic', topic_controller.index);
-=======
->>>>>>> e07651d6c856be863db9c8c829b6cbbb5f7f416f
+
 
 // GET request for creating a topic. NOTE This must come before routes that display topic (uses id).
 router.get('/topic/create', topic_controller.topic_create_get);
@@ -158,7 +153,9 @@ router.get('/topic/:id', topic_controller.topic_detail);
 
 /// session ROUTES ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//router.get('/session', session_controller.index);
+
+router.get('/session', session_controller.index);
+
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/session/create', session_controller.session_create_get);
@@ -186,10 +183,10 @@ router.get('/session', session_controller.session_list);
 
 ////////////////////////////// schedule ROUTES ///
 
-<<<<<<< HEAD
+
 router.get('/schedule', schedule_controller.index);
-=======
->>>>>>> e07651d6c856be863db9c8c829b6cbbb5f7f416f
+
+
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/schedule/create', schedule_controller.schedule_create_get);
