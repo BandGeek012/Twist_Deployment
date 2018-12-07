@@ -6,8 +6,8 @@ block content
   ul
     each school in school_list
       li 
-        a(href=school.url) #{school.title} 
-        |  (#{school.HSID})
+
+        a(href=school.url) #{school.HSName} 
 
     else
       li There are no schools.

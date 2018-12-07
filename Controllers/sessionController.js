@@ -10,6 +10,10 @@ var School = require('../models/highschool');
 
 var async = require('async');
 
+export.index = function(req, res) {
+  
+}
+
 //display all sessions
 exports.session_list = function(req, res, next) {
 
