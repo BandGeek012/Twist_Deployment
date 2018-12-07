@@ -18,20 +18,12 @@ var schedule_controller = require('../controllers/scheduleController');
 var session_controller = require('../controllers/sessionController');
 var participant_controller = require('../controllers/participantController');
 var topic_controller = require('../controllers/topicController');
-//schedule routes
-router.get('/schedule', schedule_controller.schedule_list);
-
-
-
-//session routes
-router.get('/session', session_controller.session_list);
 
 
 /// School ROUTES ///
 
-// GET admin home page.
-router.get('/school', school_controller.index);
-
+// GET request for list of all School items.
+router.get('/school', school_controller.school_list);
 
 // GET request for creating a School. NOTE This must come before routes that display school (uses id).
 router.get('/school/create', school_controller.school_create_get);
@@ -54,14 +46,13 @@ router.post('/school/:id/update', school_controller.school_update_post);
 // GET request for one School.
 router.get('/school/:id', school_controller.school_detail);
 
-// GET request for list of all School items.
-router.get('/school', school_controller.school_list);
+
 
 /// participant ROUTES ///
 
 
-// GET admin home page.
-router.get('/participant', participant_controller.index);
+// GET request for list of all participant items.
+router.get('/participant', participant_controller.participant_list);
 
 
 // GET request for creating a participant. NOTE This must come before routes that display participant (uses id).
@@ -85,14 +76,13 @@ router.post('/participant/:id/update', participant_controller.participant_update
 // GET request for one participant.
 router.get('/participant/:id', participant_controller.participant_detail);
 
-// GET request for list of all participant items.
-router.get('/participant', participant_controller.participant_list);
+
 
 /// presenter ROUTES ///
 
 
-// GET admin home page.
-router.get('/presenter', presenter_controller.index);
+// GET request for list of all presenter items.
+router.get('/presenter', presenter_controller.presenter_list);
 
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
@@ -116,15 +106,14 @@ router.post('/presenter/:id/update', presenter_controller.presenter_update_post)
 // GET request for one presenter.
 router.get('/presenter/:id', presenter_controller.presenter_detail);
 
-// GET request for list of all presenter items.
-router.get('/presenter', presenter_controller.presenter_list);
+
 
 
 /// topic ROUTES ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // GET admin home page.
-router.get('/topic', topic_controller.index);
+router.get('/topic', topic_controller.topic_list);
 
 
 // GET request for creating a topic. NOTE This must come before routes that display topic (uses id).
@@ -153,9 +142,8 @@ router.get('/topic/:id', topic_controller.topic_detail);
 
 /// session ROUTES ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-router.get('/session', session_controller.index);
-
+// GET request for list of all presenter items.
+router.get('/session', session_controller.session_list);
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/session/create', session_controller.session_create_get);
@@ -178,15 +166,12 @@ router.post('/session/:id/update', session_controller.session_update_post);
 // GET request for one presenter.
 router.get('/session/:id', session_controller.session_detail);
 
-// GET request for list of all presenter items.
-router.get('/session', session_controller.session_list);
+
 
 ////////////////////////////// schedule ROUTES ///
 
-
-router.get('/schedule', schedule_controller.index);
-
-
+// GET request for list of all presenter items.
+router.get('/schedule', schedule_controller.schedule_list);
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/schedule/create', schedule_controller.schedule_create_get);
@@ -209,12 +194,12 @@ router.post('/schedule/:id/update', schedule_controller.schedule_update_post);
 // GET request for one presenter.
 router.get('/schedule/:id', schedule_controller.schedule_detail);
 
-// GET request for list of all presenter items.
-router.get('/schedule', schedule_controller.schedule_list);
+
 
 ////////////////////////////// room ROUTES ///
 
-router.get('/room', room_controller.index);
+// GET request for list of all presenter items.
+router.get('/room', room_controller.room_list);
 
 // GET request for creating a presenter. NOTE This must come before routes that display presenter (uses id).
 router.get('/room/create', room_controller.room_create_get);
@@ -237,7 +222,6 @@ router.post('/room/:id/update', room_controller.room_update_post);
 // GET request for one presenter.
 router.get('/room/:id', room_controller.room_detail);
 
-// GET request for list of all presenter items.
-router.get('/room', room_controller.room_list);
+
 
 module.exports = router;

@@ -6,23 +6,6 @@ var async = require('async');
 
 var Room = require('../models/room');
 
-exports.index = function(req, res) {
-
-    async.parallel({
-        room_count: function(callback) {
-            room.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-        },
-        room_instance_count: function(callback) {
-            room.countDocuments({}, callback);
-        },
-        room_instance_available_count: function(callback) {
-            room.countDocuments({status:'Available'}, callback);
-        }
-    }, function(err, results) {
-        res.render('index', { title: 'Room', error: err, data: results });
-    });
-};
-
 // Display list of all rooms.
 exports.room_list = function(req, res, next) {
 

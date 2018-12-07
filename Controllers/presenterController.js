@@ -2,28 +2,7 @@ var Presenter = require('../models/presenter');
 var async = require('async');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-exports.index = function(req, res) {   
-    
-    async.parallel({
-        presenter_count: function(callback) {
-            presenter.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-        },
-        presenter_instance_count: function(callback) {
-            presenter.countDocuments({}, callback);
-        },
-        presenter_instance_available_count: function(callback) {
-            presenter.countDocuments({status:'Available'}, callback);
-        },
-        author_count: function(callback) {
-            Author.countDocuments({}, callback);
-        },
-        genre_count: function(callback) {
-            Genre.countDocuments({}, callback);
-        }
-    }, function(err, results) {
-        res.render('index', { title: 'Local Library Home', error: err, data: results });
-    });
-};
+
 
 // Display list of all Presenters.
 exports.presenter_list = function(req, res, next) {

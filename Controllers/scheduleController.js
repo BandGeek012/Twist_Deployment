@@ -8,16 +8,6 @@ var School = require('../models/highschool');
 
 var async = require('async');
 
-exports.index = function(req, res) {
-
-    async.parallel({
-        schedule_count: function(callback) {
-            schedule.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
-        },
-    }, function(err, results) {
-        res.render('index', { title: 'Schedule Home', error: err, data: results });
-    });
-};
 // Display list of all schedules.
 exports.schedule_list = function(req, res, next) {
 
