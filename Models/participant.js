@@ -9,7 +9,7 @@ var ParticipantSchema = new Schema(
     FirstName: {type: String, required: true, max: 100},
     Address: {type: String, required: true, max: 100},
     Email: {type: String, required: true, max: 100},
-    TimeStamp: {type: Date},
+    Time: {type: Date},
     ParticipantType: {type: String, required: true, max: 100},
     School: {type: Schema.Types.ObjectId, ref:'School'}
   }

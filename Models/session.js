@@ -6,7 +6,7 @@ var SessionSchema = new Schema(
   {
     SessionNum: {type:String, required: true, max:100},
     PresenterID: {type:String, required: true, max:100},
-    TimeStamp: {type: Date}
+    Time: {type: Date}
 
 });
 
