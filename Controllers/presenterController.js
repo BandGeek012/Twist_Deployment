@@ -7,8 +7,8 @@ const { sanitizeBody } = require('express-validator/filter');
 // Display list of all Presenters.
 exports.presenter_list = function(req, res, next) {
 
-    Presenter.find({}, 'LastName FirstName PresenterID')
-      .populate('PresenterID')
+    Presenter.find({})
+      .sort([['lastName', 'ascending']])
       .exec(function (err, list_presenters) {
         if (err) { return next(err); }
         //Successful, so render
@@ -99,7 +99,7 @@ exports.presenter_delete_get = function(req, res, next) {
 	
     Presenter.findById(req.params.id).exec(function(err, results) {
         if (err) { return next(err); }
-        if (results==null) { res.redirect('/catalog/presenter'); }
+        if (results==null) { res.redirect('/admin/presenter'); }
         res.render('presenter_delete', { title: 'Delete presenter', presenter: results})
     });
 };
@@ -107,7 +107,7 @@ exports.presenter_delete_get = function(req, res, next) {
 exports.presenter_delete_post = function(req, res) {
     Presenter.findByIdAndDelete(req.params.id, function deletePresenter(err){
         if (err) return next(err)
-        res.redirect('/catalog/presenters');
+        res.redirect('/admin/presenters');
     });
 };
 
@@ -116,7 +116,7 @@ exports.presenter_update_get = function(req, res, next) {
     Presenter.findById(req.params.id, function (err, presenter){
         if(err){return next(err);}
         if(presenter == null) {
-            res.redirect('/catalog/presenters/')
+            res.redirect('/admin/presenters/')
         }
         res.render('presenter_update', { title: 'Update Participation', presenter: presenter});
     });

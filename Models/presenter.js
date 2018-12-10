@@ -4,13 +4,12 @@ var Schema = mongoose.Schema;
 
 var PresenterSchema = new Schema(
   {
-    PresenterID: {type: String, required: true, max: 100},
-    LastName: {type: String, required: true, max: 100},
-    FirstName: {type: String, required: true, max: 100},
-    Occupation: {type: String, required: true, max: 100},
-    MainPhone: {type: String, required: true, max: 100},
-    MobilePhone: {type: String, required: true, max: 100},
-    Email: {type: String, required: true, max: 100}
+    lastName: {type: String, required: true, max: 100},
+    firstName: {type: String, required: true, max: 100},
+    occupation: {type: String, required: true, max: 100},
+    mainPhone: {type: String, required: true, max: 100},
+    mobilePhone: {type: String, required: true, max: 100},
+    email: {type: String, required: true, max: 100}
   }
 );
 
