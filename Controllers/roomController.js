@@ -9,7 +9,7 @@ var Room = require('../models/room');
 // Display list of all rooms.
 exports.room_list = function(req, res, next) {
 
-    Room.find({}, 'RoomNumber Capacity Building')   //used to populate in _list
+    Room.find({}, 'RoomNumber')   //used to populate in _list
       .exec(function (err, list_rooms) {
         if (err) { return next(err); }
         //Successful, so render
@@ -22,7 +22,7 @@ exports.room_list = function(req, res, next) {
   exports.room_detail = function(req, res, next) {
 
     Room.findById(req.params.id)
-    .exec(function (err, list_rooms) {
+    .exec(function (err, room) {
       if (err) { return next(err); }
       if (Room==null) { // No results.
           var err = new Error('Room not found');
@@ -30,7 +30,7 @@ exports.room_list = function(req, res, next) {
           return next(err);
         }
       // Successful, so render.
-      res.render('room_detail', { title: 'Room:'});
+      res.render('room_detail', { title: 'Room:', room: room});
     })
 
 };
@@ -106,21 +106,95 @@ exports.room_list = function(req, res, next) {
       }
   ];
   // Display Room delete form on GET.
-  exports.room_delete_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Room delete GET');
+  exports.room_delete_get = function(req, res, next) {
+
+      async.parallel({
+          room: function(callback) {
+              Room.findById(req.params.id).exec(callback)
+          },
+
+      }, function(err, results) {
+          if (err) { return next(err); }
+          if (results.room==null) { // No results.
+              res.redirect('/admin/room');
+          }
+          // Successful, so render.
+          res.render('room_delete', { title: 'Delete Room', room: results.room } );
+      });
+
   };
 
   // Handle Room delete on POST.
-  exports.room_delete_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Room delete POST');
+  exports.room_delete_post = function(req,res,next) {
+
+      // Assume valid Topic id in field.
+      Room.findByIdAndRemove(req.body.RoomNumber, function deleteRoom(err) {
+          if (err) { return next(err); }
+          // Success, so redirect to list of topics.
+          res.redirect('/admin/room');
+      });
   };
+
 
   // Display Room update form on GET.
-  exports.room_update_get = function(req, res) {
-      res.send('NOT IMPLEMENTED: Room update GET');
-  };
+  exports.room_update_get = function(req, res, next) {
 
-  // Handle Room update on POST.
-  exports.room_update_post = function(req, res) {
-      res.send('NOT IMPLEMENTED: Room update POST');
+      Room.findById(req.params.id, function(err, room) {
+          if (err) { return next(err); }
+          if (room==null) { // No results.
+              var err = new Error('Room not found');
+              err.status = 404;
+              return next(err);
+          }
+          // Success.
+          res.render('room_form', { title: 'Update Room', room: room });
+      });
+
   };
+  // Handle Room update on POST.
+  exports.room_update_post = [
+
+      // Validate that the name field is not empty.
+      body('RoomNumber', 'Room RoomNumber required').isLength({ min: 1 }).trim(),
+      body('Capacity', 'Room Capacity required').isLength({ min: 1 }).trim(),
+      body('Building', 'Room Building required').isLength({ min: 1 }).trim(),
+
+      // Sanitize (trim and escape) the name field.
+      sanitizeBody('RoomNumber').trim().escape(),
+      sanitizeBody('Capacity').trim().escape(),
+      sanitizeBody('Building').trim().escape(),
+
+       // Sanitize fields (using wildcard).
+       sanitizeBody('*').trim().escape(),
+
+      // Process request after validation and sanitization.
+      (req, res, next) => {
+
+          // Extract the validation errors from a request .
+          const errors = validationResult(req);
+
+      // Create a school object with escaped and trimmed data (and the old id!)
+          var room = new Room(
+              {
+                  RoomNumber: req.body.RoomNumber,
+                  Capacity: req.body.Capacity,
+                  Building: req.body.Building,
+                  _id:req.params.id //This is required, or a new ID will be assigned!
+                 });
+
+
+          if (!errors.isEmpty()) {
+              // There are errors. Render the form again with sanitized values and error messages.
+              res.render('room_form', { title: 'Update Room', room: room, errors: errors.array()});
+          return;
+          }
+          else {
+              // Data from form is valid. Update the record.
+              Room.findByIdAndUpdate(req.params.id, room, {}, function (err,theroom) {
+                  if (err) { return next(err); }
+                     // Successful - redirect to school detail page.
+                     res.redirect(theroom.url);
+                  });
+          }
+      }
+  ];
