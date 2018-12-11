@@ -4,9 +4,9 @@ var Schema = mongoose.Schema;
 
 var TopicSchema = new Schema(
   {
-    TopicID: {type: String, required: true, max: 100},
-    Title: {type: String, required: true, max: 100},
-    Description: {type: String, required: true, max: 100}
+    topicCode: {type: String, required: true, max: 100},
+    title: {type: String, required: true, max: 100},
+    description: {type: String, required: true, max: 100}
   }
 );
 
