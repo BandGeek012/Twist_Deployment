@@ -32,7 +32,7 @@ exports.participant_detail = function(req, res, next) {
           return next(err);
         }
       // Successful, so render.
-      res.render('participant_detail', { title: 'School:', participant:  participant});
+      res.render('participant_detail', { title: participant.name, participant:  participant});
     })
 
 };
@@ -44,7 +44,7 @@ exports.participant_create_get = function(req, res, next) {
     .exec(function (err, schools) {
       if (err) { return next(err); }
       // Successful, so render.
-      res.render('participant_form', {title: 'Create Participant', school_list:schools});
+      res.render('participant_form', {title: 'Create Participant', school_list: schools});
     });
     
 };
@@ -53,12 +53,6 @@ exports.participant_create_get = function(req, res, next) {
 exports.participant_create_post = [
     // Convert the school to an array.
     (req, res, next) => {
-        if(!(req.body.school instanceof Array)){
-            if(typeof req.body.school==='undefined')
-            req.body.school=[];
-            else
-            req.body.school=new Array(req.body.school);
-        }
         next();
     },
 
@@ -67,6 +61,8 @@ exports.participant_create_post = [
     body('LastName', 'LastName must not be empty.').isLength({ min: 1 }).trim(),
     body('Email', 'Email must not be empty.').isLength({ min: 1 }).trim(),
     body('Address', 'Address must not be empty').isLength({ min: 1 }).trim(),
+    body('ParticipantType', 'Must know the kind of Participant').isLength({ min: 1 }).trim(),
+    body('School', 'Must know if attending a School').isLength({ min: 1 }).trim(),
   
     // Sanitize fields (using wildcard).
     sanitizeBody('*').trim().escape(),
@@ -83,7 +79,8 @@ exports.participant_create_post = [
             LastName: req.body.LastName,
             Email: req.body.Email,
             Address: req.body.Address,
-            ParticipantType: req.body.ParticipantType
+            ParticipantType: req.body.ParticipantType,
+            School: req.body.School
            });
 
         if (!errors.isEmpty()) {
@@ -92,18 +89,12 @@ exports.participant_create_post = [
             // Get all schools for form.
             async.parallel({
                 schools: function(callback) {
-                    Author.find(callback);
+                    School.find(callback);
                 },
             }, function(err, results) {
                 if (err) { return next(err); }
 
-                // Mark our selected schools as checked.
-                for (let i = 0; i < results.schools.length; i++) {
-                    if (participant.school.indexOf(results.schools[i]._id) > -1) {
-                        results.schools[i].checked='true';
-                    }
-                }
-                res.render('participant_form', { title: 'Create Participant',participants:results.participants, schools:results.schools, participant: participant, errors: errors.array() });
+                res.render('participant_form', { title: 'Create Participant',participants:results.participants, school_list:results.schools, participant: participant, errors: errors.array() });
             });
             return;
         }
@@ -126,7 +117,7 @@ exports.participant_delete_get = function(req, res, next) {
     .exec(function (err, participant) {
         if (err) { return next(err); }
         if (participant==null) { // No results.
-            res.redirect('/catalog/participants');
+            res.redirect('/admin/participants');
         }
         // Successful, so render.
         res.render('participant_delete', { title: 'Delete Participant', participant:  participant});
@@ -140,7 +131,7 @@ exports.participant_delete_post = function(req, res, next) {
     Participant.findByIdAndRemove(req.body.id, function deleteParticipant(err) {
         if (err) { return next(err); }
         // Success, so redirect to list of Participant items.
-        res.redirect('/catalog/participants');
+        res.redirect('/admin/participant');
         });
 
 };
@@ -174,14 +165,15 @@ exports.participant_update_get = function(req, res, next) {
 exports.participant_update_post = [
 
     // Validate fields.
-    //body('HSName', 'School must be specified').isLength({ min: 1 }).trim(),
-    body('FirstName', 'Imprint must be specified').isLength({ min: 1 }).trim(),
-    body('LastName', 'Invalid date').isLength({ min: 1 }).trim(),
+    body('FirstName', 'FirstName must not be empty.').isLength({ min: 1 }).trim(),
+    body('LastName', 'LastName must not be empty.').isLength({ min: 1 }).trim(),
+    body('Email', 'Email must not be empty.').isLength({ min: 1 }).trim(),
+    body('Address', 'Address must not be empty').isLength({ min: 1 }).trim(),
+    body('ParticipantType', 'Must know the kind of Participant').isLength({ min: 1 }).trim(),
     
     // Sanitize fields.
     //sanitizeBody('HSName').trim().escape(),
-    sanitizeBody('FirstName').trim().escape(),
-    sanitizeBody('LastName').trim().escape(),
+    sanitizeBody('*').trim().escape(),
     
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -193,8 +185,11 @@ exports.participant_update_post = [
         var participant = new Participant(
           { FirstName: req.body.FirstName,
             LastName: req.body.LastName,
+            Email: req.body.Email,
+            Address: req.body.Address,
+            ParticipantType: req.body.ParticipantType,
             School: req.body.School,
-            _id: req.params.id
+            _id: req.params.id //This is required, or a new ID will be assigned!
            });
 
         if (!errors.isEmpty()) {

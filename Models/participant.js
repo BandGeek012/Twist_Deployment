@@ -3,9 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // add list of session and list of topics
 var ParticipantSchema = new Schema(
-  {
-    ParticipantID: {type: String, required: true, max: 100},
-    LastName: {type: String, required: true, max: 100},
+  { LastName: {type: String, required: true, max: 100},
     FirstName: {type: String, required: true, max: 100},
     Address: {type: String, required: true, max: 100},
     Email: {type: String, required: true, max: 100},

@@ -11,7 +11,7 @@ block content
     dl
     each participant in school_participants
       dt 
-        a(href=participant.url) #{participant.ParticipantID}
+        a(href=participant.url) #{participant._id}
       dd #{participant.summary}
 
     else
