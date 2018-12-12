@@ -2,25 +2,12 @@ extends layout
 
 block content
   
-  h1= title
+  h1 #{room.RoomNumber}
+  h3 Capacity: #{room.Capacity}
+  h3 Building: #{room.Building}
   
-    div(style='margin-left:20px;margin-top:20px')
-    
-    h4 Rooms
-  
-    dl
-  each room in room_list
-    dt 
-      a(href=room.url) #{room.RoomNumber}
-    dd #{room.summary}
-
-
-  
- 
-  else
-    p This room does not exist.
-  hr
-  p
-   a(href=room.url+'/delete') Delete Room
-     p
-   a(href=room.url+'/update') Update Room
+  div(style='margin-left:20px;margin-top:20px')
+    p
+     a(href=room.url+'/delete') Delete Room
+    p
+     a(href=room.url+'/update') Update Room

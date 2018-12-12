@@ -5,8 +5,11 @@ var School = require('../models/highschool');
 var Participant = require('../models/participant');
 
 var async = require('async');
-
-
+async.parallel({
+participant_count: function(callback) {
+    Participant.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
+}
+});
 // Display list of all Participants.
 exports.participant_list = function(req, res, next) {
 

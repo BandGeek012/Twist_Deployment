@@ -1,148 +1,146 @@
+var Topic = require('../models/Topic');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-var Topic = require('../models/topic');
 
-var async = require('async');
-
-// Display list of all topics.
-exports.topic_list = function(req, res, next) {
-
-    Topic.find({}, 'TopicID Title Description')
-      .populate('TopicID')
-      .exec(function (err, list_topics) {
-        if (err) { return next(err); }
-        //Successful, so render
-        res.render('topic_list', { title: 'Topic List', topic_list: list_topics });
-      });
-
-  };
-
-// Display detail page of all Topics
-exports.topic_detail = function(req,res) {
-    res.send('NOT IMPLEMENTED: Topic Detail')
+// Display list.
+exports.topic_list = function(req, res) {
+    Topic.find()
+    .sort([['topicCode', 'ascending']])
+    .exec(function (err, list_topics) {
+        if (err) { return next(err);}
+        res.render('topic_list', { title: 'Topics', topic_list: list_topics});
+    });
 };
 
-// Display Topic create form on GET.
-exports.topic_create_get = function(req,res,next) {
-    res.render('topic_form', { title: 'Create Topic' })
+// Display detail page.
+exports.topic_detail = function(req, res, next) {
+	
+	Topic.findById(req.params.id).exec(function (err, topic)
+	{
+		if (err) { return next(err); }
+		if (topic==null) {
+			var err = new Error('Topic not found');
+			err.status = 404;
+			return next(err);
+        }
+		res.render('topic_detail', { title: 'Topic Details', topic: topic})
+	});
 };
 
-// Handle Topic create on POST
+// Display  create form on GET.
+exports.topic_create_get = function(req, res) {
+    res.render('topic_create', { title: 'New Topic'});
+};
+
+// Handle  create on POST.
 exports.topic_create_post = [
+    body('topicCode').isLength({ min: 1}).trim(),
+	body('title').isLength({ min: 1 }).trim().withMessage('A Title is required.'),
+	body('description').isLength({min:1}).trim().withMessage('Please describe the topic'),
 
-    // Validate fields.
-    body('title', 'Title is required').isLength({ min:1 }).trim(),
-    body('description', 'Description is required').isLength({ min:1 }).trim(),
+    sanitizeBody('topicCode').trim(),
+	sanitizeBody('title').trim(),
+    sanitizeBody('description').trim(),
+ 	function(req, res, next) {
 
-    // Sanitize fields.
-    sanitizeBody('title').trim().escape(),
-    sanitizeBody('description').trim().escape(),
-
-    // Process request after validation and sanitization.
-    (req, res, next) => {
-
-        // Extract the validation errors from a request.
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/errors messages.
-            res.render('topic_form', { title: 'Create Topic', topic: req.body, errors: errors.array() });
+            res.render('topic_create', { title: 'New Topic', topic: req.body, errors: errors.array() });
             return;
         }
         else {
-            // Data from form is valid.
-
-            // Create a Topic object with escaped and trimmed data.
             var topic = new Topic(
                 {
+                    topicCode: req.body.topicCode,
                     title: req.body.title,
-                    description: req.body.description
+                    description: req.body.description,
                 });
             topic.save(function (err) {
                 if (err) { return next(err); }
-                // Successful - redirect to new topic record.
                 res.redirect(topic.url);
             });
         }
-    }
+	}
 ];
 
-// Display Topic delete form on GET
-exports.topic_delete_get = function(req,res,next) {
-    
-    Topic.findById(req.params.id)
-    .exec(function (err, topic) {
-        if (err) { return next(err); }
-        if (topic==null) { // No results.
-            res.redirect('/index/topics');
+exports.topic_delete_get = function(req, res, next) {
+    Topic.findById(req.params.id).exec(function (err, topic)
+	{
+		if (err) { return next(err); }
+		if (topic==null) {
+			res.redirect('/admin/Topic/');
         }
-        // Successful, so render.
-        res.render('topic_delete', { title: 'Delete Topic', topic:topic});
-    })
+		res.render('topic_delete', { title: 'Delete Topic', topic: topic})
+	});
 };
 
-// Handle Topic delete on POST
-exports.topic_delete_post = function(req,res,next) {
-    
-    // Assume valid Topic id in field.
-    Topic.findByIdAndRemove(req.body.id, function deleteTopic(err) {
-        if (err) { return next(err); }
-        // Success, so redirect to list of topics.
-        res.redirect('/index/topics');
-    });
+// Handle delete on POST.
+exports.topic_delete_post = function(req, res) {
+			
+	Topic.findByIdAndRemove(req.params.id, function deleteTopic(err) {
+		if (err) {return next(err); }
+		res.redirect('/admin/Topic')
+	});
 };
 
-//Display Topic update form on GET
-exports.topic_update_get = function(req,res,next) {
-    Topic.findById(req.params.id, function(err, topic) {
-        if (err) { return next(err); }
-        if (topic==null) { // No results.
-            var err = new Error('Topic not found');
-            err.status = 404;
-            return next(err);
+// Display update form on GET.
+exports.topic_update_get = function(req, res) {
+	
+    Topic.findById(req.params.id).exec(function (err, topic)
+	{
+		if (err) { return next(err); }
+		if (topic==null) {
+			res.redirect('/admin/Topic/');
         }
-        // Success.
-        res.render('topic_form', { title: 'Update Topic', topic: topic });
-    });
+
+		res.render('topic_update', { 
+            title: 'Update Topic',
+            topic: topic, 
+            _id: topic._id,
+            topicCode: topic.topicCode,
+            title: topic.title, 
+            description: topic.description,
+        });
+	});
 };
 
-// Handle Topic delete on POST
+// Handle update on POST.
 exports.topic_update_post = [
+	body('topicCode').isLength({ min: 1}).trim(),
+	body('title').isLength({ min: 1 }).trim().withMessage('A Title is required.'),
+	body('description').isLength({min:1}).trim().withMessage('Please describe the topic'),
 
-    // Validate fields.
-    body('title', 'Title is required').isLength({ min:1 }).trim(),
-    body('description', 'Description is required').isLength({ min:1 }).trim(),
+    sanitizeBody('topicCode').trim(),
+	sanitizeBody('title').trim(),
+    sanitizeBody('description').trim(),
 
-    // Sanitize fields.
-    sanitizeBody('title').trim().escape(),
-    sanitizeBody('description').trim().escape(),
-    
-    // Process request after validation and sanitization.
-    (req, res, next) => {
 
-        // Extract the validation errors from a request.
+ 	function(req, res, next) {
         const errors = validationResult(req);
-
-        // Create a Topic object with escaped/trimmed data and current id.
-        var topic = new Topic(
-                {
-                    title: req.body.title,
-                    description: req.body.description,
-                    _id: req.params.id
-                });
-
         if (!errors.isEmpty()) {
-            // There are errors so render the form again with sanitized values and error messages.
-            res.render('topic_form', { title: 'Update Topic', topic: topic, errors: errors.array()});
-          return;
+			res.render('topic_update', { 
+                title: 'Update Topic', 
+                topic: topic,
+                topicCode: req.body.topicCode,
+                title: req.body.title,
+                description: req.body.description,
+                _id:req.params.id,
+                errors: errors.array()
+            });
+            return;
         }
         else {
-            // Data from form is valid. Update the record.
-            Topic.findByIdAndUpdate(req.params.id, topic, {}, function (err,thetopic) {
+            var topic = new Topic(
+                {
+                    topicCode: req.body.topicCode,
+                    title: req.body.title,
+                    description: req.body.description,
+                    _id:req.params.id
+                });
+            Topic.findByIdAndUpdate(req.params.id, topic, {}, function (err, thetopic) {
                 if (err) { return next(err); }
-                   // Successful - redirect to detail page.
-                    res.redirect(thetopic.url);
+                res.redirect(thetopic.url);
             });
         }
-    }
+	}
 ];

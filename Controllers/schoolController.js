@@ -138,7 +138,7 @@ exports.school_delete_post = function(req, res, next) {
           School.findById(req.body.schoolid).exec(callback)
         },
         school_participants: function(callback) {
-          Participant.find({ 'school': req.body.HSID }).exec(callback)
+          Participant.find({ 'school': req.body._id }).exec(callback)
         },
     }, function(err, results) {
         if (err) { return next(err); }

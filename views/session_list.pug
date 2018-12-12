@@ -4,8 +4,12 @@ block content
   h1= title
 
   ul
-    each Presenter in session_list
+    each session in session_list
       li
-        a(href=session.url) #{PresenterID.name})
+        a(href=session.url) #{session.SessionNum}
+        |  #{session.ParticipantID}
+        |  #{session.Time}
+    
+    
     else
       li There are no sessions.
