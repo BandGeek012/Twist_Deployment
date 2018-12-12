@@ -14,8 +14,7 @@ block content
       dl
       each participant in school_participants
         hr
-        if school_participants=='Enrolled'
-            p.text-success #{school_participants}
+        p.text-success #{participant.name}
   else
     p Do you really want to delete this School?
     

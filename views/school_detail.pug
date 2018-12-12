@@ -11,8 +11,7 @@ block content
     dl
     each participant in school_participants
       dt 
-        a(href=participant.url) #{participant._id}
-      dd #{participant.summary}
+        a(href=participant.url) #{participant.name}
 
     else
       p This school has no participants
