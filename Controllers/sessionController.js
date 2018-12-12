@@ -5,9 +5,9 @@ var mongoose = require('mongoose');
 
 var async = require('async');
 
-var Session = require('../models/session');
-//var School = require('../models/highschool');
-//var Participant = require('../models/participant');
+var Session = require('../Models/session');
+//var School = require('../Models/highschool');
+//var Participant = require('../Models/participant');
 
 
 

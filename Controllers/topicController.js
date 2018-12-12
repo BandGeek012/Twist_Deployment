@@ -1,4 +1,4 @@
-var Topic = require('../models/Topic');
+var Topic = require('../Models/Topic');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 

@@ -1,8 +1,8 @@
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 var mongoose = require('mongoose');
-var School = require('../models/highschool');
-var Participant = require('../models/participant');
+var School = require('../Models/highschool');
+var Participant = require('../Models/participant');
 
 var async = require('async');
 
