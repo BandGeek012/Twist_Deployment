@@ -11,13 +11,13 @@ router.get('/', function(req, res) {
 });
 
 //require controller modules.
-var room_controller = require('../controllers/roomController');
-var school_controller = require('../controllers/schoolController');
-var presenter_controller = require('../controllers/presenterController');
-var schedule_controller = require('../controllers/scheduleController');
-var session_controller = require('../controllers/sessionController');
-var participant_controller = require('../controllers/participantController');
-var topic_controller = require('../controllers/topicController');
+var room_controller = require('../Controllers/roomController');
+var school_controller = require('../Controllers/schoolController');
+var presenter_controller = require('../Controllers/presenterController');
+var schedule_controller = require('../Controllers/scheduleController');
+var session_controller = require('../Controllers/sessionController');
+var participant_controller = require('../Controllers/participantController');
+var topic_controller = require('../Controllers/topicController');
 
 
 /// School ROUTES ///
