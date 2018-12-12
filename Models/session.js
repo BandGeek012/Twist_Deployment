@@ -1,3 +1,4 @@
+
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
@@ -29,4 +30,3 @@ SessionSchema
 
 //Export model
 module.exports = mongoose.model('Session', SessionSchema);
-
