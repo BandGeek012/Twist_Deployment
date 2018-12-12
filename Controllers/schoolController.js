@@ -29,7 +29,7 @@ exports.school_detail = function(req, res, next) {
         },
 
         school_participants: function(callback) {
-          Participant.find({ 'school': req.params.id })
+          Participant.find({ 'School': req.params.id })
           .exec(callback);
         },
 
@@ -116,7 +116,7 @@ exports.school_delete_get = function(req, res, next) {
             School.findById(req.params.id).exec(callback)
         },
         school_participants: function(callback) {
-          Participant.find({ 'school': req.params.id }).exec(callback)
+          Participant.find({ 'School': req.params.id }).exec(callback)
         },
     }, function(err, results) {
         if (err) { return next(err); }
@@ -138,7 +138,7 @@ exports.school_delete_post = function(req, res, next) {
           School.findById(req.body.schoolid).exec(callback)
         },
         school_participants: function(callback) {
-          Participant.find({ 'school': req.body._id }).exec(callback)
+          Participant.find({ 'School': req.body._id }).exec(callback)
         },
     }, function(err, results) {
         if (err) { return next(err); }
