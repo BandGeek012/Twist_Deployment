@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 var async = require('async');
 
-var Room = require('../models/room');
+var Room = require('../Models/room');
 
 // Display list of all rooms.
 exports.room_list = function(req, res, next) {
