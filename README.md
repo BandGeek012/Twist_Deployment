@@ -1,5 +1,11 @@
-# Twist
-Here is the website created for the twist program 
-<br> Collaborators:
+# Twist Enrollment and Maintenance Website
+<br><h1>Collaborators for this project:
 <br> Matt Chumsena, Morgan Perez, Bryan Weikle
-<br><h1>Site Purpose
+<br><h2>Learning Objectives:
+<br>I learned a lot from this project but I would say the main learning objectives would be collaboration, time management, client-programmer cooperation, and developing programming skills.
+<ol>
+  <li>Collaboration with team members was a vital part of this project. In order to get this large project finished in the time given we had to assign different parts of the website to each member to get more stuff done at the same time. Another key part of this is communication. Several pieces of this website relied on another part meaning that we had to talk to each other on how we were programming our parts and how we planned on getting them to sync with each other and the database.
+  <li>Time management was not really mention towards the beginning of the semester but it became very apparent that it would be needed for this project. We were introduced to teamgantt in order to help us keep track on when things needed to be completed in hopes of finishing in time for the presentation. We learned the hard way that since this was the first time any of us worked on a project of this scale that things took longer than expected to complete. Other challenges added to the completion time of certain aspects of the website such as the controllers and views.
+  <li>Although we did not interact with the client themselves we were shown how to research and gather the necessary information to produce a product suited for both the client and those they wish to use it on a regular basis. We were shown the importance of use cases to know how the product should be used and possible errors that may occur. We used E-R diagrams to keep track of fields and tables for the site along with the needed information for each and how they are all connected to one another. Site maps and wireframes were used to determine what the finished project would look like and to give us an idea if it would be user friendly.
+  <li>The final learning objective was developing our programming skills. We were should how to develop schema, controllers, views, and routes. We practiced with a small library database to see how to connect a database to the information that is entered on a website and how to pull that same information back out. We also learned how to have easy maintenance such as the ability to update or delete any of the information that is stored on the database. Another aspect of the programming skills was the use of a deployer in order to get our webstie onto the web and some key features to keep any information on the site secure from hackers.
+<br><h2>My Contributions:
